@@ -11,7 +11,7 @@ from config import MODEL_NAME
 from huggingface_hub import HfFolder
 
 # --- アプリケーション設定 ---
-st.set_page_config(page_title="TinyLlama Chatbot", layout="wide")
+st.set_page_config(page_title="TinyLlama Chatbot", layout="centered")
 
 # --- 初期化処理 ---
 # NLTKデータのダウンロード（初回起動時など）
@@ -50,13 +50,13 @@ st.title("🤖 TinyLlama Chatbot with Feedback")
 st.write("TinyLlamaモデルを使用したチャットボットです。回答に対してフィードバックを行えます。")
 st.markdown("---")
 
-# --- サイドバー ---
-st.sidebar.title("ナビゲーション")
+# ---navigation---
+st.title("ナビゲーション")
 # セッション状態を使用して選択ページを保持
 if 'page' not in st.session_state:
     st.session_state.page = "チャット" # デフォルトページ
 
-page = st.sidebar.radio(
+page = st.radio(
     "ページ選択",
     ["チャット", "履歴閲覧", "サンプルデータ管理"],
     key="page_selector",
