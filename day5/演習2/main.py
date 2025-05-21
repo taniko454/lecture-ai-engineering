@@ -15,7 +15,7 @@ class DataLoader:
     """データロードを行うクラス"""
 
     @staticmethod
-    def load_titanic_data(path=None):
+    def load_titanic_data(path="C:\Users\ahmf1\OneDrive\デスクトップ\lecture-ai-engineering\day5\演習2\data\Titanic.csv"):
         """Titanicデータセットを読み込む"""
         if path:
             return pd.read_csv(path)
@@ -285,3 +285,31 @@ if __name__ == "__main__":
     # ベースラインとの比較
     baseline_ok = ModelTester.compare_with_baseline(metrics)
     print(f"ベースライン比較: {'合格' if baseline_ok else '不合格'}")
+
+def regression_test(current_model, X_test, y_test, baseline_model_path="models/titanic_model.pkl"):
+    """
+    過去モデルと比較して性能が劣化していないかを確認する差分テスト関数。
+    - 現在のモデルと過去モデルの精度を比較。
+    """
+    # 現在のモデルを評価
+    current_metrics = ModelTester.evaluate_model(current_model, X_test, y_test)
+    current_accuracy = current_metrics["accuracy"]
+    print(f"✅ 現在のモデル精度: {current_accuracy:.4f}")
+
+    # 過去モデルをロードして評価
+    try:
+        baseline_model = ModelTester.load_model(baseline_model_path)
+        baseline_metrics = ModelTester.evaluate_model(baseline_model, X_test, y_test)
+        baseline_accuracy = baseline_metrics["accuracy"]
+        print(f"📦 過去モデル精度: {baseline_accuracy:.4f}")
+    except FileNotFoundError:
+        print("⚠️ 過去モデルが存在しません。初回トレーニングと見なします。")
+        return True  # 比較不可だが失敗ではない
+
+    # 精度の差分チェック
+    if current_accuracy >= baseline_accuracy:
+        print("✅ 精度に劣化はありません。")
+        return True
+    else:
+        print("❌ 精度が過去モデルより劣化しています！")
+        return False
